@@ -7,3 +7,5 @@ Chương trình này giúp người dùng có thể chuyển đổi những câu
 Ngoài việc sử dụng những hình ảnh kí hiệu của từng chữ cái để ghép lại thành 1 câu hoàn chỉnh
 ![IMAGE](https://i.imgur.com/75T8Foa.png)
 
+Người dùng có thể tự thêm những ngôn ngữ kí hiệu cho mình thông qua việc chụp ảnh lại hành động thể hiện cho từ muốn chuyển thành ngôn ngữ kí hiệu thông qua webcam
+
