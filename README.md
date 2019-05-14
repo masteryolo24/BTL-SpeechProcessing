@@ -12,4 +12,4 @@ Người dùng có thể tự thêm những ngôn ngữ kí hiệu cho mình th�
 ## Hướng dẫn chạy chương trình
 Trước tiên chạy câu lệnh `pip install -r requirements.txt` để cài đặt các thư viện cần thiết
 
-Tiếp theo ể chạy chương trình bạn chạy file main.py bằng câu lệnh  `python main.py` và thực hiện theo hướng dẫn trên cửa sổ *terminal* hoặc *console* 
+Tiếp theo  chạy chương trình bạn chạy file main.py bằng câu lệnh  `python main.py` và thực hiện theo hướng dẫn trên cửa sổ *terminal* hoặc *console* 
