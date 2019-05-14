@@ -114,7 +114,7 @@ def input_keyboard():
 
     elif inputK  == 'c':
         work_with_string(input_text(), image)
-        text2speech("Changing text to sign language")
+        text2speech("Changing speech to sign language")
         display_gif()
 def capture_image(text):
     cam = cv2.VideoCapture(0)
