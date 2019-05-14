@@ -1,3 +1,11 @@
-speech_recognition
-gtts
+SpeechRecognition
+gTTS
+imageio
+opencv-python
 ffmpy
+moviepy
+pygame
+pyglet
+Pillow
+pynput
+numpy

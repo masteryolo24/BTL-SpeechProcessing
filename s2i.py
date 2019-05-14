@@ -9,7 +9,6 @@ import numpy as np
 import pygame
 import pyglet
 import os
-import argparse
 import time
 import ffmpy
 from pynput import keyboard
@@ -87,10 +86,13 @@ def convert_gif2mp4(gif_path, mp4_path):
 def display_gif():
     convert_gif2mp4('test.gif', 'test.mp4')
     cam = cv2.VideoCapture('test.mp4')
-    while cam.isOpened():
+    while (cam.isOpened()):
         ret,frame = cam.read()
-        cv2.imshow('webcam', frame)
-        cv2.waitKey(100)
+        if ret == True:
+            cv2.imshow('gif', frame)
+            cv2.waitKey(100)
+        else:
+        	break;
     cam.release()
     cv2.destroyAllWindows()
     while True:
