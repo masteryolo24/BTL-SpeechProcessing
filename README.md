@@ -10,4 +10,6 @@ Ngoài việc sử dụng những hình ảnh kí hiệu của từng chữ cái
 Người dùng có thể tự thêm những ngôn ngữ kí hiệu cho mình thông qua việc chụp ảnh lại hành động thể hiện cho từ muốn chuyển thành ngôn ngữ kí hiệu thông qua webcam
 
 ## Hướng dẫn chạy chương trình
-Để chạy chương trình bạn chạy file main.py bằng câu lệnh  `python main.py` và thực hiện theo hướng dẫn trên cửa sơ *terminal* hoặc *console* 
+Trước tiên chạy câu lệnh `pip install -r requirements.txt` để cài đặt các thư viện cần thiết
+
+Tiếp theo ể chạy chương trình bạn chạy file main.py bằng câu lệnh  `python main.py` và thực hiện theo hướng dẫn trên cửa sổ *terminal* hoặc *console* 
