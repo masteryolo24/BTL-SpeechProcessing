@@ -4,7 +4,6 @@ import matplotlib.image as mpimg
 import sys
 import imageio
 import PIL.Image
-from tkinter import *
 import cv2
 import numpy as np 
 import pygame
@@ -15,29 +14,36 @@ import time
 import ffmpy
 from pynput import keyboard
 from moviepy.editor import *
+from gtts import gTTS 
+
 image = []
 
+def speech2text():
+    r = sr.Recognizer()
+    text2speech("Press Enter to record")
+    input("Press Enter to record...")
+    with sr.Microphone() as source:
+        print('Say something')
+        text2speech('Say something')
+        audio = r.listen(source)
+    text = r.recognize_google(audio)
+    try:
+        print ('Google thinks you said:\n' + text)
+        text2speech('Google thinks you said ' +text)
+    except:
+        pass
+    return text
 
-"""r = sr.Recognizer()
-
-input("Press Enter to record...")
-with sr.Microphone() as source:
-    print('Say Hello')
-    audio = r.listen(source)
-text = r.recognize_google(audio)
-try:
-    print ('Google thinks you said:\n' + text)
-except:
-    pass"""
-
-
-
-VALID_EXTENSIONS = ('png', 'jpg') 
+def text2speech(mytext):
+    language = 'en'
+    myobj = gTTS(text=mytext, lang=language, slow=False) 
+    myobj.save("test.mp3") 
+    os.system("mpg321 test.mp3") 
 
 def input_text():
-	s = input()
-	s = s.lower()
-	return s
+    s = speech2text()
+    s = s.lower()
+    return s
 
 def create_gif(filenames, duration):
     images = []
@@ -51,7 +57,6 @@ def work_with_string(s, image):
     array_string = s.split()
     array_char = []
     for i in range(0, len(array_string)):
-        print(array_string[i])
         if os.path.exists(os.path.join("image", array_string[i] + '.png')) == True:
             array_char.append(array_string[i])
 
@@ -61,31 +66,12 @@ def work_with_string(s, image):
     
     for k in range(0, len(array_char)):
         image.append(os.path.join("image", array_char[k]+ '.png'))
-    
-    print(array_char)
-    create_gif(image, 5)
+        create_gif(image, 5)
 def get_char(s):
     array = []
     for i in range(0, len(s)):
         array.append(s[i])
     return array
-
-def display_gif(ag_file, width, height):
-    # pick an animated gif file you have in the working directory
-    ag_file
-    animation = pyglet.resource.animation(ag_file)
-    sprite = pyglet.sprite.Sprite(animation)
-    # create a window and set it to the image size
-    win = pyglet.window.Window(width, height)
-    # set window background color = r, g, b, alpha
-    # each value goes from 0.0 to 1.0
-    green = 0, 1, 0, 1
-    pyglet.gl.glClearColor(*green)
-    @win.event
-    def on_draw():
-        win.clear()
-        sprite.draw()
-    pyglet.app.run()
 
 def parse_arguments(argv):
     parser = argparse.ArgumentParser()
@@ -107,40 +93,65 @@ def display_gif():
         cv2.waitKey(100)
     cam.release()
     cv2.destroyAllWindows()
+    while True:
+        print("Press q to exit")
+        print("Press c to continue")
+        j = input()
+        if j == 'q':
+            break;
+        elif j == 'c':
+            main()
 
 def input_keyboard():
-	inputK = input()
-	if inputK == 's':
-		print("Nhap chuoi muon them vao ngon ngu ki hieu: ")
-		text = input()
-		capture_image(text)
+    inputK = input()
+    if inputK == 'a':
+        text2speech("What word do you want to add to sign language dictionary?")
+        print("What word do you want to add to sign language dictionary? ")
+        text = input()
+        capture_image(text)
 
-	elif inputK  == 'c':
-		print("Nhap tu muon chuyen thanh ngon ngu ki hieu: ")
-		work_with_string(input_text(), image)
-		display_gif()
+    elif inputK  == 'c':
+        work_with_string(input_text(), image)
+        text2speech("Changing text to sign language")
+        display_gif()
 def capture_image(text):
-	cam = cv2.VideoCapture(0)
-	cv2.namedWindow("webcam")
-	img_counter = 0
-	while True:
-		ret, frame =cam.read()
-		cv2.imshow("test", frame)
-		if not ret:
-			break
-		k = cv2.waitKey(1)
-		if k % 256 ==27:
-			break;
-		elif k % 256 ==32:
-			print("Press Space to capture: ")
-            print("Press Esc to exit")
-			img_name = os.path.join("image", text +".png")
-			cv2.imwrite(img_name, frame)
-	cam.release()
-	cv2.destroyAllWindows()
+    cam = cv2.VideoCapture(0)
+    cv2.namedWindow("webcam")
+    img_counter = 0
+    text2speech("Press Space to capture")
+    text2speech("Press Esc to close webcam")
+    print("Press Space to capture, Esc to close webcam")
+    while True:
+        ret, frame =cam.read()
+        cv2.imshow("test", frame)
+        if not ret:
+            break;
+        k = cv2.waitKey(1)
+        if k % 256 ==27:
+            break;
+        elif k % 256 ==32:
+            img_name = os.path.join("image", text +".png")
+            cv2.imwrite(img_name, frame)
+            img = cv2.imread(os.path.join('image', text+ ".png"), 1)
+            cv2.imshow("image", img)
+            cv2.waitKey(2000)
+            cv2.destroyAllWindows()
+            print("Captured")
+            text2speech("Captured")
+    cam.release()
+    cv2.destroyAllWindows()
+    while True:
+        print("Press q to exit")
+        print("Press c to continue")
+        j = input()
+        if j == 'q':
+            break;
+        elif j == 'c':
+            main()
+
 
 def main():
-	print("Press \"c\" to change text to sign language")
-	print("Press \"s\" to add more sign language")
-	input_keyboard()
+    print("Press \"c\" to change text to sign language")
+    print("Press \"a\" to add more sign language")
+    input_keyboard()
 
