@@ -10,4 +10,4 @@ Ngoài việc sử dụng những hình ảnh kí hiệu của từng chữ cái
 Người dùng có thể tự thêm những ngôn ngữ kí hiệu cho mình thông qua việc chụp ảnh lại hành động thể hiện cho từ muốn chuyển thành ngôn ngữ kí hiệu thông qua webcam
 
 ## Hướng dẫn chạy chương trình
-Để chạy chương trình bạn chạy file main.py bằng câu lệnh > *main.py*
+Để chạy chương trình bạn chạy file main.py bằng câu lệnh  `*main.py*`
