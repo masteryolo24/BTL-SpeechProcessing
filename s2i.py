@@ -1,7 +1,6 @@
 import speech_recognition as sr 
 import matplotlib.pyplot as plt 
 import matplotlib.image as mpimg
-import sys
 import imageio
 import PIL.Image
 import cv2
@@ -14,16 +13,120 @@ import ffmpy
 from pynput import keyboard
 from moviepy.editor import *
 from gtts import gTTS 
+from PyQt5.QtWidgets import QDialog,QApplication ,QMessageBox, QListWidget, QCheckBox ,QComboBox, QGroupBox ,QDialogButtonBox , QVBoxLayout , QFrame,QTabWidget, QWidget, QLabel, QLineEdit, QPushButton
+import sys
+from PyQt5.QtCore import QFileInfo
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import pyqtSlot
 
 image = []
 
+#Cac ham su dung voi UI (PyQt5)
+class TabDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("Speech Processing")
+        self.setWindowIcon(QIcon("myicon.png"))
+
+        tabwidget = QTabWidget()
+        tabwidget.addTab(FirstTab(), "Change")
+        tabwidget.addTab(TabTwo(), "Add")
+
+        buttonbox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttonbox.accepted.connect(self.accept)
+        buttonbox.rejected.connect(self.reject)
+
+        vboxLayout = QVBoxLayout()
+        vboxLayout.addWidget(tabwidget)
+        
+        vboxLayout.addWidget(buttonbox)
+        self.setLayout(vboxLayout)
+
+class FirstTab(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.title = 'Test Tab1'
+        self.left = 10
+        self.top = 10
+        self.width = 1000
+        self.height = 500
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+
+        self.textbox = QLineEdit(self)
+        self.textbox.move(20, 20)
+        self.textbox.resize(280,40)
+
+        self.button = QPushButton('Change to sign language', self)
+        self.button.move(20, 80)
+
+        self.button.clicked.connect(self.on_click)
+
+        self.show()
+
+    @pyqtSlot()
+    def on_click(self):
+        print("tab1, clicked")
+        textboxValue = self.textbox.text()
+        QMessageBox.question(self, "Messsage ", textboxValue, QMessageBox.Ok, QMessageBox.Ok)
+        self.textbox.setText("")
+        print(textboxValue)
+        press_c(textboxValue)
+
+class TabTwo(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.title = 'Test Tab1'
+        self.left = 10
+        self.top = 10
+        self.width = 1000
+        self.height = 500
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+
+        self.textbox = QLineEdit(self)
+        self.textbox.move(20, 20)
+        self.textbox.resize(280,40)
+
+        self.button = QPushButton('Add to sign language dictionary', self)
+        self.button.move(20, 80)
+        self.button.clicked.connect(self.on_click)
+        """
+        self.button2 = QPushButton('Capture', self)
+        self.button2.move(20, 100)
+        self.button2.clicked.connect(self.on_click2)
+        """
+
+        self.show()
+    @pyqtSlot()
+    def on_click(self):
+        print('tab2 clicked')
+        textboxValue = self.textbox.text()
+        QMessageBox.question(self, "Message ", textboxValue, QMessageBox.Ok, QMessageBox.Ok)
+        self.textbox.setText("")
+        print(textboxValue)
+        press_a(textboxValue)
+
+    #def on_click2(self):
+
+
+
+#Cac ham su dung voi terminal
 def speech2text():
     r = sr.Recognizer()
-    text2speech("Press Enter to record")
+    read_audio("Enter.mp3")
     input("Press Enter to record...")
     with sr.Microphone() as source:
         print('Say something')
-        text2speech('Say something')
+        read_audio("something.mp3")
+        read_audio("beep.mp3")
         audio = r.listen(source)
     text = r.recognize_google(audio)
     try:
@@ -38,6 +141,9 @@ def text2speech(mytext):
     myobj = gTTS(text=mytext, lang=language, slow=False) 
     myobj.save("test.mp3") 
     os.system("mpg321 test.mp3") 
+
+def read_audio(file):
+    os.system("mpg321 " + os.path.join("audio", file))
 
 def input_text():
     s = speech2text()
@@ -92,7 +198,7 @@ def display_gif():
             cv2.imshow('gif', frame)
             cv2.waitKey(100)
         else:
-        	break;
+            break;
     cam.release()
     cv2.destroyAllWindows()
     while True:
@@ -103,25 +209,39 @@ def display_gif():
             break;
         elif j == 'c':
             main()
-
+"""
 def input_keyboard():
     inputK = input()
     if inputK == 'a':
-        text2speech("What word do you want to add to sign language dictionary?")
+        read_audio("add.mp3")
         print("What word do you want to add to sign language dictionary? ")
         text = input()
         capture_image(text)
 
     elif inputK  == 'c':
         work_with_string(input_text(), image)
-        text2speech("Changing speech to sign language")
+        read_audio("change.mp3")
         display_gif()
+        """
+
+def press_c(text):
+    work_with_string(text, image)
+    read_audio("change.mp3")
+    display_gif()
+    
+def press_a(text):
+    read_audio('add.mp3')
+    print("What word do you want to add to sign language dictionary?")
+    capture_image(text)
+
+
+
 def capture_image(text):
     cam = cv2.VideoCapture(0)
     cv2.namedWindow("webcam")
     img_counter = 0
-    text2speech("Press Space to capture")
-    text2speech("Press Esc to close webcam")
+    #text2speech("Press Space to capture")
+    #text2speech("Press Esc to close webcam")
     print("Press Space to capture, Esc to close webcam")
     while True:
         ret, frame =cam.read()
@@ -139,7 +259,7 @@ def capture_image(text):
             cv2.waitKey(2000)
             cv2.destroyAllWindows()
             print("Captured")
-            text2speech("Captured")
+            read_audio("capture.mp3")
     cam.release()
     cv2.destroyAllWindows()
     while True:
@@ -151,9 +271,15 @@ def capture_image(text):
         elif j == 'c':
             main()
 
-
+"""
 def main():
     print("Press \"c\" to change text to sign language")
     print("Press \"a\" to add more sign language")
     input_keyboard()
+    """
 
+
+app = QApplication(sys.argv)
+tabdialog = TabDialog()
+tabdialog.show()
+app.exec()
