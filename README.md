@@ -13,3 +13,9 @@ Người dùng có thể tự thêm những ngôn ngữ kí hiệu cho mình th�
 Trước tiên chạy câu lệnh `pip install -r requirements.txt` để cài đặt các thư viện cần thiết
 
 Tiếp theo  chạy chương trình bạn chạy file s2i.py bằng câu lệnh  `python s2i.py` và thao tác các chức năng trên cửa sổ UI 
+
+## Các tính năng
+1. Chuyển từ text sang ngôn ngữ kí hiệu
+2. Chuyển từ giọng nói sang ngôn ngữ kí hiệu
+3. Thêm hình ảnh vào từ điển ngôn ngữ kí hiệu bằng cách chụp ảnh thông qua webcam
+4. TÌm kiếm ngôn ngữ kí hiệu thông qua trang ch
