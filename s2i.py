@@ -13,27 +13,36 @@ import ffmpy
 from pynput import keyboard
 from moviepy.editor import *
 from gtts import gTTS 
-from PyQt5.QtWidgets import QDialog,QApplication ,QMessageBox, QListWidget, QCheckBox ,QComboBox, QGroupBox ,QDialogButtonBox , QVBoxLayout , QFrame,QTabWidget, QWidget, QLabel, QLineEdit, QPushButton
+from PyQt5.QtWidgets import QDialog, QApplication,QTabBar, QMessageBox, QListWidget, QCheckBox ,QComboBox, QGroupBox ,QDialogButtonBox , QVBoxLayout , QFrame,QTabWidget, QWidget, QLabel, QLineEdit, QPushButton
 import sys
 from PyQt5.QtCore import QFileInfo
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtGui import QIcon, QImage, QPalette, QBrush
+from PyQt5.QtCore import pyqtSlot, QSize
+import webbrowser
 
 image = []
-
-#Cac ham su dung voi UI (PyQt5)
 class TabDialog(QDialog):
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle("Speech Processing")
-        self.setWindowIcon(QIcon("myicon.png"))
+        self.setWindowIcon(QIcon("test.png"))
+        self.setGeometry(100, 100, 500, 300)
+        """oImage = QImage("test.png")
+        sImage = oImage.scaled(QSize(500,500))
+        palette = QPalette()
+        palette.setBrush(10, QBrush(sImage))
+        self.setPalette(palette)"""
+        #self.setStyleSheet("background-color:blue;")
+
+        self.label = QLabel('Test', self)
+        self.label.setGeometry(50, 50, 200, 50)
 
         tabwidget = QTabWidget()
         tabwidget.addTab(FirstTab(), "Change")
         tabwidget.addTab(TabTwo(), "Add")
 
-        buttonbox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttonbox = QDialogButtonBox(QDialogButtonBox.Cancel)
         buttonbox.accepted.connect(self.accept)
         buttonbox.rejected.connect(self.reject)
 
@@ -47,8 +56,8 @@ class FirstTab(QWidget):
     def __init__(self):
         super().__init__()
         self.title = 'Test Tab1'
-        self.left = 10
-        self.top = 10
+        self.left = 100
+        self.top = 100
         self.width = 1000
         self.height = 500
         self.initUI()
@@ -66,16 +75,32 @@ class FirstTab(QWidget):
 
         self.button.clicked.connect(self.on_click)
 
+        self.button2 = QPushButton("Change to sign language by speaking", self)
+        self.button2.move (20, 120)
+
+        self.button2.clicked.connect(self.on_click2)
+
+        self.button3 = QPushButton("Record", self)
+        self.button3.move (20, 160)
+        self.button3.clicked.connect(self.on_click3)
         self.show()
 
     @pyqtSlot()
     def on_click(self):
-        print("tab1, clicked")
         textboxValue = self.textbox.text()
         QMessageBox.question(self, "Messsage ", textboxValue, QMessageBox.Ok, QMessageBox.Ok)
         self.textbox.setText("")
         print(textboxValue)
-        press_c(textboxValue)
+        press_c2(textboxValue)
+
+    def on_click2(self):
+        work_with_string(input_text(), image)
+        read_audio("change.mp3")
+        display_gif()
+
+    def ob_click3(self):
+        
+        
 
 class TabTwo(QWidget):
     def __init__(self):
@@ -98,11 +123,19 @@ class TabTwo(QWidget):
         self.button = QPushButton('Add to sign language dictionary', self)
         self.button.move(20, 80)
         self.button.clicked.connect(self.on_click)
-        """
-        self.button2 = QPushButton('Capture', self)
-        self.button2.move(20, 100)
+
+        self.textbox2 = QLineEdit(self)
+        self.textbox2.move(20, 120)
+        self.textbox2.resize(280, 40)
+
+        self.button2 = QPushButton('Search ASL', self)
+        self.button2.move(20, 180)
         self.button2.clicked.connect(self.on_click2)
-        """
+
+        """self.button.setStyleSheet("background-color:yellow;")
+        self.button2.setStyleSheet("background-color:yellow;")
+
+        #self.button2.setStyleSheet("background-color:green;")"""
 
         self.show()
     @pyqtSlot()
@@ -114,11 +147,12 @@ class TabTwo(QWidget):
         print(textboxValue)
         press_a(textboxValue)
 
-    #def on_click2(self):
+    def on_click2(self):
+    	textboxValue = self.textbox2.text()
+    	QMessageBox.question(self, 'Message', textboxValue, QMessageBox.Ok, QMessageBox.Ok)
+    	self.textbox2.setText('')
+    	search(textboxValue)
 
-
-
-#Cac ham su dung voi terminal
 def speech2text():
     r = sr.Recognizer()
     read_audio("Enter.mp3")
@@ -126,7 +160,6 @@ def speech2text():
     with sr.Microphone() as source:
         print('Say something')
         read_audio("something.mp3")
-        read_audio("beep.mp3")
         audio = r.listen(source)
     text = r.recognize_google(audio)
     try:
@@ -201,36 +234,18 @@ def display_gif():
             break;
     cam.release()
     cv2.destroyAllWindows()
-    while True:
-        print("Press q to exit")
-        print("Press c to continue")
-        j = input()
-        if j == 'q':
-            break;
-        elif j == 'c':
-            main()
-"""
-def input_keyboard():
-    inputK = input()
-    if inputK == 'a':
-        read_audio("add.mp3")
-        print("What word do you want to add to sign language dictionary? ")
-        text = input()
-        capture_image(text)
-
-    elif inputK  == 'c':
-        work_with_string(input_text(), image)
-        read_audio("change.mp3")
-        display_gif()
-        """
 
 def press_c(text):
     work_with_string(text, image)
     read_audio("change.mp3")
     display_gif()
+
+def press_c2(text):
+    work_with_string(text, image)
+    read_audio("changetext.mp3")
+    display_gif()
     
 def press_a(text):
-    read_audio('add.mp3')
     print("What word do you want to add to sign language dictionary?")
     capture_image(text)
 
@@ -240,8 +255,6 @@ def capture_image(text):
     cam = cv2.VideoCapture(0)
     cv2.namedWindow("webcam")
     img_counter = 0
-    #text2speech("Press Space to capture")
-    #text2speech("Press Esc to close webcam")
     print("Press Space to capture, Esc to close webcam")
     while True:
         ret, frame =cam.read()
@@ -262,24 +275,13 @@ def capture_image(text):
             read_audio("capture.mp3")
     cam.release()
     cv2.destroyAllWindows()
-    while True:
-        print("Press q to exit")
-        print("Press c to continue")
-        j = input()
-        if j == 'q':
-            break;
-        elif j == 'c':
-            main()
 
-"""
-def main():
-    print("Press \"c\" to change text to sign language")
-    print("Press \"a\" to add more sign language")
-    input_keyboard()
-    """
+def search(text):
+	text = text.upper()
+	webbrowser.open('https://www.signingsavvy.com/sign/' + text)
 
-
-app = QApplication(sys.argv)
-tabdialog = TabDialog()
-tabdialog.show()
-app.exec()
+while True:
+    app = QApplication(sys.argv) 
+    tabdialog = TabDialog()
+    tabdialog.show()
+    app.exec()

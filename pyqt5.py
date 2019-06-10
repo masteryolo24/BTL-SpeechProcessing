@@ -1,128 +1,98 @@
-from PyQt5.QtWidgets import QDialog,QApplication , QListWidget, QCheckBox ,QComboBox, QGroupBox ,QDialogButtonBox , QVBoxLayout , QFrame,QTabWidget, QWidget, QLabel, QLineEdit
 import sys
-from PyQt5.QtCore import QFileInfo
-from PyQt5.QtGui import QIcon
+from PyQt5 import QtCore, QtWidgets
 
 
+class MainWindow(QtWidgets.QWidget):
 
-class TabDialog(QDialog):
+    switch_window = QtCore.pyqtSignal(str)
+
     def __init__(self):
-        super().__init__()
+        QtWidgets.QWidget.__init__(self)
+        self.setWindowTitle('Main Window')
 
-        self.setWindowTitle("Tab Widget Application")
-        self.setWindowIcon(QIcon("myicon.png"))
+        layout = QtWidgets.QGridLayout()
 
+        self.line_edit = QtWidgets.QLineEdit()
+        layout.addWidget(self.line_edit)
 
+        self.button = QtWidgets.QPushButton('Switch Window')
+        self.button.clicked.connect(self.switch)
+        layout.addWidget(self.button)
 
-        tabwidget = QTabWidget()
-        tabwidget.addTab(FirstTab(), "First Tab")
-        tabwidget.addTab(TabTwo(), "Second Tab")
-        tabwidget.addTab(TabThree(), "Third Tab")
+        self.setLayout(layout)
 
-
-        buttonbox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-
-        buttonbox.accepted.connect(self.accept)
-        buttonbox.rejected.connect(self.reject)
-
-        vboxLayout = QVBoxLayout()
-        vboxLayout.addWidget(tabwidget)
-
-        vboxLayout.addWidget(buttonbox)
-
-        self.setLayout(vboxLayout)
-
-class FirstTab(QWidget):
-    def __init__(self):
-
-        super().__init__()
-
-        filenameLabel = QLabel("Name:")
-        fileNameEdit = QLineEdit()
-
-        dob = QLabel("Birth Date:")
-        dobedit = QLineEdit()
-
-        age = QLabel("Age:")
-        ageedit = QLineEdit()
-
-        PhoneNu = QLabel("Phone:")
-        phonedit = QLineEdit()
-
-        ftablayout = QVBoxLayout()
-        ftablayout.addWidget(filenameLabel)
-        ftablayout.addWidget(fileNameEdit)
-        ftablayout.addWidget(dob)
-        ftablayout.addWidget(dobedit)
-        ftablayout.addWidget(age)
-        ftablayout.addWidget(ageedit)
-        ftablayout.addWidget(PhoneNu)
-        ftablayout.addWidget(phonedit)
+    def switch(self):
+        self.switch_window.emit(self.line_edit.text())
 
 
+class WindowTwo(QtWidgets.QWidget):
 
-        self.setLayout(ftablayout)
+    def __init__(self, text):
+        QtWidgets.QWidget.__init__(self)
+        self.setWindowTitle('Window Two')
 
+        layout = QtWidgets.QGridLayout()
 
-class TabTwo(QWidget):
-    def __init__(self):
-        super().__init__()
+        self.label = QtWidgets.QLabel(text)
+        layout.addWidget(self.label)
 
-        selecGroup = QGroupBox("Select Operating System")
-        combo = QComboBox()
-        list = ["Windows", "Linux", "Fedora", "Kali", "Mac"]
-        combo.addItems(list)
-        selectLayout = QVBoxLayout()
-        selectLayout.addWidget(combo)
-        selecGroup.setLayout(selectLayout)
+        self.button = QtWidgets.QPushButton('Close')
+        self.button.clicked.connect(self.close)
 
+        layout.addWidget(self.button)
 
-        checkGroup = QGroupBox("Which Operating System You Like ?")
-        windows = QCheckBox("Windows")
-        mac = QCheckBox("Mac")
-        linux = QCheckBox("Linux")
-
-        checkLayout = QVBoxLayout()
-        checkLayout.addWidget(windows)
-        checkLayout.addWidget(mac)
-        checkLayout.addWidget(linux)
-        checkGroup.setLayout(checkLayout)
-
-
-        mainLayout = QVBoxLayout()
-        mainLayout.addWidget(selecGroup)
-        mainLayout.addWidget(checkGroup)
-        self.setLayout(mainLayout)
-
-
-
-
-class TabThree(QWidget):
-    def __init__(self):
-        super().__init__()
-
-
-        label = QLabel("Terms And Conditions")
-        listWidget = QListWidget()
-        list = []
-
-        for i in range(1,20):
-            list.append("This Is Terms And Condition")
-
-        listWidget.insertItems(0, list)
-        checkBox = QCheckBox("Check The Terms And Conditions")
-
-
-        layout = QVBoxLayout()
-        layout.addWidget(label)
-        layout.addWidget(listWidget)
-        layout.addWidget(checkBox)
         self.setLayout(layout)
 
 
+class Login(QtWidgets.QWidget):
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    tabdialog = TabDialog()
-    tabdialog.show()
-    app.exec()
+    switch_window = QtCore.pyqtSignal()
+
+    def __init__(self):
+        QtWidgets.QWidget.__init__(self)
+        self.setWindowTitle('Login')
+
+        layout = QtWidgets.QGridLayout()
+
+        self.button = QtWidgets.QPushButton('Login')
+        self.button.clicked.connect(self.login)
+
+        layout.addWidget(self.button)
+
+        self.setLayout(layout)
+
+    def login(self):
+        self.switch_window.emit()
+
+
+class Controller:
+
+    def __init__(self):
+        pass
+
+    def show_login(self):
+        self.login = Login()
+        self.login.switch_window.connect(self.show_main)
+        self.login.show()
+
+    def show_main(self):
+        self.window = MainWindow()
+        self.window.switch_window.connect(self.show_window_two)
+        self.login.close()
+        self.window.show()
+
+    def show_window_two(self, text):
+        self.window_two = WindowTwo(text)
+        self.window.close()
+        self.window_two.show()
+
+
+def main():
+    app = QtWidgets.QApplication(sys.argv)
+    controller = Controller()
+    controller.show_login()
+    sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    main()

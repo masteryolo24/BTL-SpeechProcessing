@@ -23,4 +23,4 @@ def text2speech(mytext, save_dir):
     myobj.save(os.path.join("audio", save_dir)) 
     os.system("mpg321 " + os.path.join("audio", save_dir)) 
 
-text2speech("Say something after beep", "beep.mp3")
+text2speech("Changing text to sign language", "changetext.mp3")
