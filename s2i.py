@@ -79,10 +79,6 @@ class FirstTab(QWidget):
         self.button2.move (20, 120)
 
         self.button2.clicked.connect(self.on_click2)
-
-        self.button3 = QPushButton("Record", self)
-        self.button3.move (20, 160)
-        self.button3.clicked.connect(self.on_click3)
         self.show()
 
     @pyqtSlot()
@@ -96,10 +92,7 @@ class FirstTab(QWidget):
     def on_click2(self):
         work_with_string(input_text(), image)
         read_audio("change.mp3")
-        display_gif()
-
-    def ob_click3(self):
-        
+        display_gif()        
         
 
 class TabTwo(QWidget):
@@ -132,11 +125,6 @@ class TabTwo(QWidget):
         self.button2.move(20, 180)
         self.button2.clicked.connect(self.on_click2)
 
-        """self.button.setStyleSheet("background-color:yellow;")
-        self.button2.setStyleSheet("background-color:yellow;")
-
-        #self.button2.setStyleSheet("background-color:green;")"""
-
         self.show()
     @pyqtSlot()
     def on_click(self):
@@ -155,8 +143,8 @@ class TabTwo(QWidget):
 
 def speech2text():
     r = sr.Recognizer()
-    read_audio("Enter.mp3")
-    input("Press Enter to record...")
+    """read_audio("Enter.mp3")
+    input("Press Enter to record...")"""
     with sr.Microphone() as source:
         print('Say something')
         read_audio("something.mp3")
